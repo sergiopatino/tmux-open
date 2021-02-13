@@ -35,7 +35,12 @@ display_message() {
 }
 
 stored_engine_vars() {
-	tmux show-options -g | grep -i "^@open" | cut -d '-' -f2 | cut -d ' ' -f1 | xargs
+	tmux show-options -g |
+		grep -i "^@open-" |
+		grep -vi "^@open-editor" |
+		cut -d '-' -f2 |
+		cut -d ' ' -f1 |
+		xargs
 }
 
 get_engine() {
@@ -43,7 +48,7 @@ get_engine() {
 	tmux show-options -g | grep -i "^@open-$engine_var" | cut -d ' ' -f2 | xargs
 }
 
-tmux_version="$(tmux -V | cut -d ' ' -f 2)"
+tmux_version="$(tmux -V | cut -d ' ' -f 2 | sed 's/next-//'))"
 tmux-is-at-least() {
 	if [[ $tmux_version == $1 ]]
 	then
